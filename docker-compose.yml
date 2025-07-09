@@ -1,0 +1,50 @@
+name: elixphoenix
+
+services:
+  app:
+    build:
+      context: .docker/elixir
+      target: base
+    tty: true
+    stdin_open: true
+    depends_on:
+      database:
+        condition: service_healthy
+    volumes:
+      - app:/usr/src/app
+    networks:
+      - elixphoenix
+    ports:
+      - "4000:4000"
+
+  database:
+    build:
+      context: .docker/postgres
+      target: base
+    shm_size: 128mb
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d wiki"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 3s
+    volumes:
+      - database:/var/lib/postgresql/data
+    networks:
+      - elixphoenix
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-elixphoenix_dev}
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+
+volumes:
+  database:
+  app:
+    driver: local
+    driver_opts:
+      type: none
+      device: .
+      o: bind
+
+networks:
+  elixphoenix:
