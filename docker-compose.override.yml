@@ -13,6 +13,7 @@ services:
       - "4000:4000"
     environment:
       APP_PORT: ${APP_PORT:-4000}
+      APP_SECRET_BASE_KEY: ${APP_SECRET_BASE_KEY:-wXjssXvWNHQ0R8LQy1JJmMINf/bpYeI4gdSG40jk1dzSsO6vZcE2JMWQ68qdlgle}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
       POSTGRES_DB: ${POSTGRES_DB:-elixphoenix_dev}
       POSTGRES_USER: ${POSTGRES_USER:-postgres}

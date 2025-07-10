@@ -24,7 +24,7 @@ config :elixphoenix, ElixphoenixWeb.Endpoint,
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: "wXjssXvWNHQ0R8LQy1JJmMINf/bpYeI4gdSG40jk1dzSsO6vZcE2JMWQ68qdlgle",
+  secret_key_base: System.get_env("APP_SECRET_KEY_BASE"),
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:elixphoenix, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:elixphoenix, ~w(--watch)]}
