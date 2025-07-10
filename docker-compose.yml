@@ -13,7 +13,7 @@ services:
     image: exilesprx/elixphoenix-database:${VERSION:-main}
     shm_size: 128mb
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 30s
       retries: 5
