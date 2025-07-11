@@ -11,7 +11,6 @@ services:
     environment:
       PHX_PORT: ${APP_PORT:-4000}
       PHX_HOST: ${APP_HOST:-}
-      PHX_SERVER: true
       SECRET_KEY_BASE: ${APP_SECRET_KEY_BASE}
       DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@${POSTGRES_HOSTNAME:-database}/${POSTGRES_DB:-elixphoenix}
 

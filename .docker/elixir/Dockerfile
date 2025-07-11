@@ -4,6 +4,9 @@ RUN apt-get -y update \
   && apt-get clean \
   && rm -rf /var/lib/apt/lists/*
 
+# TODO: Production related items
+# ENV MIX_ENV=prod
+# ENV PHX_SERVER=TRUE
 
 FROM base AS dev
 RUN useradd --create-home --shell /bin/bash --uid 1000 elixir
