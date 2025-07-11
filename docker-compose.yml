@@ -9,19 +9,21 @@ services:
     networks:
       - elixphoenix
     environment:
-      APP_PORT: ${APP_PORT:-4000}
-      APP_IP: ${APP_IP:-0.0.0.0}
-      APP_SECRET_BASE_KEY: ${APP_SECRET_BASE_KEY}
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-elixphoenix}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
-      POSTGRES_HOSTNAME: ${POSTGRES_HOSTNAME:-database}
+      PHX_PORT: ${APP_PORT:-4000}
+      PHX_HOST: ${APP_HOST:-}
+      PHX_SERVER: true
+      SECRET_KEY_BASE: ${APP_SECRET_KEY_BASE}
+      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@${POSTGRES_HOSTNAME:-database}/${POSTGRES_DB:-elixphoenix}
 
   database:
     image: exilesprx/elixphoenix-database:${VERSION:-main}
     shm_size: 128mb
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-elixphoenix}"]
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-elixphoenix}",
+        ]
       interval: 5s
       timeout: 30s
       retries: 5

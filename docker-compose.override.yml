@@ -12,7 +12,8 @@ services:
     ports:
       - "4000:${APP_PORT:-4000}"
     environment:
-      APP_SECRET_BASE_KEY: wXjssXvWNHQ0R8LQy1JJmMINf/bpYeI4gdSG40jk1dzSsO6vZcE2JMWQ68qdlgle
+      PHX_IP: ${APP_IP:-0.0.0.0}
+      SECRET_KEY_BASE: wXjssXvWNHQ0R8LQy1JJmMINf/bpYeI4gdSG40jk1dzSsO6vZcE2JMWQ68qdlgle
 
   database:
     build:

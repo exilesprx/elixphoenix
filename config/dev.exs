@@ -3,10 +3,7 @@ import System
 
 # Configure your database
 config :elixphoenix, Elixphoenix.Repo,
-  username: System.get_env("POSTGRES_USER"),
-  password: System.get_env("POSTGRES_PASSWORD"),
-  hostname: System.get_env("POSTGRES_HOSTNAME"),
-  database: System.get_env("POSTGRES_DB"),
+  url: System.get_env("DATABASE_URL"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -21,13 +18,13 @@ config :elixphoenix, ElixphoenixWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [
-    ip: :inet.parse_address(String.to_charlist(System.get_env("APP_IP"))) |> elem(1),
-    port: System.get_env("APP_PORT") |> String.to_integer()
+    ip: :inet.parse_address(String.to_charlist(System.get_env("PHX_IP"))) |> elem(1),
+    port: System.get_env("PHX_PORT") |> String.to_integer()
   ],
   check_origin: false,
   code_reloader: true,
   debug_errors: true,
-  secret_key_base: System.get_env("APP_SECRET_BASE_KEY"),
+  secret_key_base: System.get_env("SECRET_KEY_BASE"),
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:elixphoenix, ~w(--sourcemap=inline --watch)]},
     tailwind: {Tailwind, :install_and_run, [:elixphoenix, ~w(--watch)]}
