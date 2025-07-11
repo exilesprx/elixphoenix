@@ -14,6 +14,10 @@ services:
     environment:
       PHX_IP: ${APP_IP:-0.0.0.0}
       SECRET_KEY_BASE: wXjssXvWNHQ0R8LQy1JJmMINf/bpYeI4gdSG40jk1dzSsO6vZcE2JMWQ68qdlgle
+      DATABASE_HOST: database
+      DATABASE_NAME: ${POSTGRES_DB:-elixphoenix}
+      DATABASE_USER: ${POSTGRES_USER:-postgres}
+      DATABASE_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
 
   database:
     build:

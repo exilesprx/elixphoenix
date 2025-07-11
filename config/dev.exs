@@ -3,7 +3,10 @@ import System
 
 # Configure your database
 config :elixphoenix, Elixphoenix.Repo,
-  url: System.get_env("DATABASE_URL"),
+  username: System.get_env("DATABASE_USER"),
+  password: System.get_env("DATABASE_PASSWORD"),
+  hostname: System.get_env("DATABASE_HOST"),
+  database: System.get_env("DATABASE_NAME"),
   stacktrace: true,
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
