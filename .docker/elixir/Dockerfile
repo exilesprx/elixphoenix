@@ -9,3 +9,4 @@ FROM base AS dev
 RUN useradd --create-home --shell /bin/bash --uid 1000 elixir
 USER elixir
 WORKDIR /usr/src/app
+ENTRYPOINT ["/bin/bash"]
