@@ -8,81 +8,31 @@ services:
         condition: service_healthy
     networks:
       - elixphoenix
-    environment:
-      PHX_PORT: ${APP_PORT:-4000}
-      PHX_HOST: ${APP_HOST:-}
-      SECRET_KEY_BASE: ${APP_SECRET_KEY_BASE}
-      DATABASE_URL: postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@database/${POSTGRES_DB:-elixphoenix}
     labels:
       - "traefik.enable=true"
       - "traefik.docker.network=elixphoenix"
-      - "traefik.http.routers.app.rule=Host(`localhost`)"
-      - "traefik.http.routers.app.tls=false"
-      # - "traefik.http.routers.app.tls.certresolver=myresolver"
-      - "traefik.http.routers.app.entrypoints=web"
-      - "traefik.http.services.app.loadbalancer.server.port=4000"
 
   database:
     image: exilesprx/elixphoenix-database:${VERSION:-main}
     shm_size: 128mb
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pg_isready -U ${POSTGRES_USER:-postgres} -d ${POSTGRES_DB:-elixphoenix}",
-        ]
-      interval: 5s
-      timeout: 30s
-      retries: 5
-      start_period: 3s
     volumes:
       - database:/var/lib/postgresql/data
     networks:
       - elixphoenix
-    environment:
-      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
-      POSTGRES_DB: ${POSTGRES_DB:-elixphoenix}
-      POSTGRES_USER: ${POSTGRES_USER:-postgres}
 
   traefik:
     build:
       context: .docker/traefik
       target: base
-    command:
-      - "--api.insecure=true"
-      - "--api.dashboard=true"
-      - "--providers.docker.exposedByDefault=false"
-      # - "--entryPoints.websecure.address=:443"
-      - "--entryPoints.web.address=:8081"
-      # - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
-      # - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
-      # - "--certificatesresolvers.myresolver.acme.dnschallenge.resolvers=1.1.1.1:53"
-      # - "--certificatesresolvers.myresolver.acme.dnschallenge.provider=namedotcom"
-      # - "--certificatesresolvers.myresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
-      # - "--certificatesresolvers.myresolver.acme.email=${ACME_EMAIL}"
-      # - "--certificatesresolvers.myresolver.acme.storage=/letsencrypt/acme.json"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.dashboard.rule=Host(`localhost`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
-      - "traefik.http.routers.dashboard.tls=false"
-      # - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
-      - "traefik.http.routers.dashboard.entrypoints=web"
-      # - "traefik.http.routers.dashboard.service=api@internal"
-      # - "traefik.http.routers.dashboard.middlewares=auth"
-      # - "traefik.http.middlewares.auth.basicauth.users=${AUTH_USERNAME:-admin}:${AUTH_PASSWORD:-admin}"
     networks:
       - elixphoenix
-    ports:
-      - "8080:8080"
-      - "8081:8081"
-      # - "443:443"
     volumes:
-      - letsencrypt:/letsencrypt
       - /var/run/docker.sock:/var/run/docker.sock
 
 volumes:
   database:
-  letsencrypt:
 
 networks:
   elixphoenix:

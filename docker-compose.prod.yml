@@ -1,0 +1,57 @@
+name: elixphoenix
+
+services:
+  app:
+    environment:
+      PHX_PORT: 80
+      PHX_HOST: ${APP_HOST}
+      SECRET_KEY_BASE: ${APP_SECRET_KEY_BASE}
+      DATABASE_URL: postgresql://${POSTGRES_USER}:${POSTGRES_PASSWORD}@database/${POSTGRES_DB}
+    labels:
+      - "traefik.http.routers.app.rule=Host(`elixphoenix.lan.soupybutter.com`)"
+      - "traefik.http.routers.app.tls=true"
+      - "traefik.http.routers.app.entrypoints=web"
+      - "traefik.http.services.app.loadbalancer.server.port=80"
+      - "traefik.http.routers.app.tls.certresolver=certresolver"
+
+  database:
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 30s
+      retries: 5
+      start_period: 3s
+    environment:
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+
+  traefik:
+    build:
+      context: .docker/traefik
+      target: base
+    command:
+      - "--api.insecure=false"
+      - "--api.dashboard=true"
+      - "--providers.docker.exposedByDefault=false"
+      - "--entryPoints.websecure.address=:443"
+      - "--entryPoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entryPoints.web.http.redirections.entryPoint.scheme=https"
+      - "--certificatesresolvers.certresolver.acme.dnschallenge.resolvers=1.1.1.1:53"
+      - "--certificatesresolvers.certresolver.acme.dnschallenge.provider=namedotcom"
+      - "--certificatesresolvers.certresolver.acme.caserver=https://acme-v02.api.letsencrypt.org/directory"
+      - "--certificatesresolvers.certresolver.acme.email=${ACME_EMAIL}"
+      - "--certificatesresolvers.certresolver.acme.storage=/letsencrypt/acme.json"
+    labels:
+      - "traefik.http.routers.dashboard.rule=Host(`elixphoenix.lan.soupybutter.com`) && (PathPrefix(`/api`) || PathPrefix(`/dashboard`))"
+      - "traefik.http.routers.dashboard.tls=true"
+      - "traefik.http.routers.dashboard.tls.certresolver=certresolver"
+      - "traefik.http.routers.dashboard.entrypoints=web"
+      - "traefik.http.routers.dashboard.service=api@internal"
+      - "traefik.http.routers.dashboard.middlewares=auth"
+      - "traefik.http.middlewares.auth.basicauth.users=${AUTH_USERNAME}:${AUTH_PASSWORD}"
+    volumes:
+      - letsencrypt:/letsencrypt
+
+volumes:
+  letsencrypt:
