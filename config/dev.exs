@@ -22,7 +22,7 @@ config :elixphoenix, ElixphoenixWeb.Endpoint,
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [
     ip: :inet.parse_address(String.to_charlist(System.get_env("PHX_IP"))) |> elem(1),
-    port: System.get_env("PHX_PORT") |> String.to_integer()
+    port: String.to_integer(System.get_env("PHX_PORT"))
   ],
   check_origin: false,
   code_reloader: true,
