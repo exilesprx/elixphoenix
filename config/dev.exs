@@ -21,8 +21,8 @@ config :elixphoenix, ElixphoenixWeb.Endpoint,
   # Binding to loopback ipv4 address prevents access from other machines.
   # Change to `ip: {0, 0, 0, 0}` to allow access from other machines.
   http: [
-    ip: :inet.parse_address(String.to_charlist(System.get_env("PHX_IP"))) |> elem(1),
-    port: String.to_integer(System.get_env("PHX_PORT"))
+    ip: :inet.parse_address(String.to_charlist(System.get_env("PHX_IP", "0.0.0.0"))) |> elem(1),
+    port: String.to_integer(System.get_env("PHX_PORT", "4000"))
   ],
   check_origin: false,
   code_reloader: true,
