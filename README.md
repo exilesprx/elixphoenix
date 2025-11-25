@@ -19,4 +19,8 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 
 ## TODOs
 
--
+## Notes
+
+- User auth
+  - email: campbell.andrew86@yahoo.com
+  - password: 1234567890ab
