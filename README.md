@@ -24,3 +24,11 @@ Ready to run in production? Please [check our deployment guides](https://hexdocs
 - User auth
   - email: campbell.andrew86@yahoo.com
   - password: 1234567890ab
+
+- Traefik
+  - until traefik is updated to use new apis, add this to the /etc/docker/daemon.json on the host mahcine:
+  ```
+  {
+    "min-api-version": "1.24"
+  }
+  ```
